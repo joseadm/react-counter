@@ -1,18 +1,48 @@
-import React, { useState } from 'react';
 import './style.css';
-import CountContext from './context';
-import Child from './Child';
-export default function App() {
-  const [count, setCount] = useState(0);
+import React, { useState } from 'react';
 
-  const countHandler = () => {
-    setCount(count + 1);
+export default function App() {
+  const [names, setNames] = useState([]);
+  const [newName, setNewName] = useState('');
+
+  let addNewName = () => {
+    setNames([...names, newName]);
+    setNewName('');
+  };
+
+  let changeName = (event) => {
+    setNewName(event.target.value);
+  };
+
+  let removeName = (index) => {
+    var array = [...names];
+    array.splice(index, 1);
+    setNames(array);
   };
 
   return (
-    <CountContext.Provider value={{ count, countHandler }}>
-      <Child />
-      <h2>{count}</h2>
-    </CountContext.Provider>
+    <div>
+      <input
+        onChange={changeName}
+        value={newName}
+        className="name"
+        placeholder="Name"
+      />
+      <button onClick={addNewName}>Add</button>
+      <ul>
+        {names.map((name, index) => (
+          <li>
+            {name}
+            <button
+              onClick={() => {
+                removeName(index);
+              }}
+            >
+              x
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

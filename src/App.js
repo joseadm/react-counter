@@ -1,46 +1,28 @@
 import './style.css';
-import React, { useState } from 'react';
+//https://jsonplaceholder.typicode.com/posts/1/comments
+import React, { useEffect, useState } from 'react';
 
 export default function App() {
-  const [names, setNames] = useState([]);
-  const [newName, setNewName] = useState('');
+  const [comments, setComments] = useState([]);
 
-  let addNewName = () => {
-    setNames([...names, newName]);
-    setNewName('');
+  let fetchData = async () => {
+    await fetch('https://jsonplaceholder.typicode.com/posts/1/comments')
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(JSON.stringify(json));
+        setComments(json);
+      });
   };
 
-  let changeName = (event) => {
-    setNewName(event.target.value);
-  };
-
-  let removeName = (index) => {
-    var array = [...names];
-    array.splice(index, 1);
-    setNames(array);
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
-      <input
-        onChange={changeName}
-        value={newName}
-        className="name"
-        placeholder="Name"
-      />
-      <button onClick={addNewName}>Add</button>
       <ul>
-        {names.map((name, index) => (
-          <li>
-            {name}
-            <button
-              onClick={() => {
-                removeName(index);
-              }}
-            >
-              x
-            </button>
-          </li>
+        {comments.map((comment) => (
+          <li>{comment.name}</li>
         ))}
       </ul>
     </div>
